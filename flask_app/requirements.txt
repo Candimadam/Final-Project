@@ -1,0 +1,12 @@
+# Flask Web App — Sistem Rekomendasi YouTube IndoBERT
+# requirements.txt
+#
+# Install: pip install -r requirements.txt
+
+flask>=2.3.0
+torch>=2.0.0
+transformers>=4.30.0
+stanza>=1.5.0
+scikit-learn>=1.2.0
+numpy>=1.24.0
+pandas>=2.0.0

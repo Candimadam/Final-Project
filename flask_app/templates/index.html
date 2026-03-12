@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Sistem Rekomendasi Channel YouTube menggunakan IndoBERT dan Cosine Similarity"
+    />
+    <title>Rekomendasi Channel YouTube · IndoBERT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="icon"
+      href="https://cdn-icons-png.freepik.com/512/4401/4401464.png"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <!-- ══════════════════════════════════════════ HEADER ══ -->
+    <header class="header">
+      <div class="container header-inner">
+        <!-- BRAND -->
+        <div class="brand">
+          <div class="brand-icon">
+            <!-- YouTube Official Icon -->
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              width="24"
+              height="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+              />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">Rekomendasi Channel YouTube</div>
+            <div class="brand-sub">
+              IndoBERT · Cosine Similarity · Content-Based Filtering
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Demo Badge + Theme Toggle -->
+        <div class="header-right">
+          <span class="badge-thesis">Demo Sistem Rekomendasi</span>
+
+          <!-- Theme Toggle Button -->
+          <button
+            id="theme-toggle"
+            class="theme-toggle"
+            aria-label="Toggle theme"
+            title="Ganti tema"
+          >
+            <!-- Moon icon (dark mode) -->
+            <svg
+              id="icon-moon"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              width="16"
+              height="16"
+            >
+              <path
+                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+              />
+            </svg>
+            <!-- Sun icon (light mode) -->
+            <svg
+              id="icon-sun"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              width="16"
+              height="16"
+              style="display: none"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════ MAIN ════ -->
+    <main class="main">
+      <div class="container">
+        <!-- HERO -->
+        <section class="hero">
+          <h1 class="hero-title">
+            Temukan Konten<br /><span class="gradient-text"
+              >yang Paling Relevan</span
+            >
+          </h1>
+          <p class="hero-desc">
+            Masukkan kata kunci yang Anda cari, pilih kategori dan jenis
+            rekomendasi.<br />
+            Sistem akan mencari channel &amp; video YouTube yang paling mirip
+            menggunakan <strong>IndoBERT</strong>.
+          </p>
+        </section>
+
+        <!-- SEARCH CARD -->
+        <section class="search-card" id="search-card">
+          <!-- ROW 1: MODE + CATEGORY -->
+          <div class="form-row two-col">
+            <!-- Mode Filter -->
+            <div class="field-group">
+              <label class="field-label">
+                <span class="label-dot dot-purple"></span>
+                Jenis Rekomendasi <span class="req">*</span>
+              </label>
+              <div class="mode-toggle" id="mode-toggle">
+                <button
+                  class="mode-btn active"
+                  data-mode="video"
+                  id="btn-video"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="15">
+                    <path
+                      d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm14.553 8.106A1 1 0 0118 13.2V6.8a1 1 0 00-1.447-.894l-3 1.5A1 1 0 0013 8.3v3.4a1 1 0 00.553.894l3 1.5z"
+                    />
+                  </svg>
+                  Judul Video
+                </button>
+                <button class="mode-btn" data-mode="channel" id="btn-channel">
+                  <svg viewBox="0 0 20 20" fill="currentColor" width="15">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  Channel
+                </button>
+              </div>
+              <input type="hidden" id="selected-mode" value="video" />
+            </div>
+
+            <!-- Category Filter -->
+            <div class="field-group">
+              <label class="field-label">
+                <span class="label-dot dot-blue"></span>
+                Kategori Konten <span class="req">*</span>
+              </label>
+              <select id="category-select" class="select-input">
+                <option value="Semua">— Semua Kategori —</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ROW 2: QUERY + TOP-K -->
+          <div class="form-row two-col">
+            <!-- Query Input -->
+            <div class="field-group">
+              <label class="field-label" for="query-input">
+                <span class="label-dot dot-indigo"></span>
+                Kata Kunci Pencarian <span class="req">*</span>
+              </label>
+              <div class="input-wrapper">
+                <svg
+                  class="input-icon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  width="18"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  id="query-input"
+                  class="query-input"
+                  placeholder="Contoh: review HP, resep masakan, berita hari ini . . . "
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+            </div>
+
+            <!-- Top-K Slider -->
+            <div class="field-group">
+              <label class="field-label" for="topk-slider">
+                <span class="label-dot dot-green"></span>
+                Jumlah Rekomendasi: <strong id="topk-display">5</strong>
+              </label>
+              <div class="slider-wrapper">
+                <span class="slider-min">1</span>
+                <input
+                  type="range"
+                  id="topk-slider"
+                  class="slider"
+                  min="1"
+                  max="10"
+                  value="5"
+                />
+                <span class="slider-max">10</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBMIT ROW -->
+          <div class="form-row submit-row">
+            <div
+              id="validation-msg"
+              class="validation-msg"
+              style="display: none"
+            ></div>
+            <button id="search-btn" class="search-btn" type="button">
+              <svg
+                id="btn-icon"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                width="18"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <div id="btn-spinner" class="spinner" style="display: none"></div>
+              <span id="btn-label">Cari Rekomendasi</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- RESULTS SECTION -->
+        <section id="results-section" style="display: none">
+          <div class="results-header">
+            <div class="results-meta" id="results-meta"></div>
+            <div class="results-badge" id="results-badge"></div>
+          </div>
+          <div id="results-container" class="results-container"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <p>
+          <strong
+            >Penerapan IndoBERT untuk Mengukur Kemiripan Berdasarkan Judul
+            Konten pada Sistem Rekomendasi Channel YouTube</strong
+          ><br />
+          Sistem Rekomendasi · Content-Based Filtering · IndoBERT
+          (indolem/indobert-base-uncased) · Cosine Similarity · Precision@K
+        </p>
+      </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+  </body>
+</html>
