@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Sistem Rekomendasi Channel YouTube menggunakan IndoBERT dan Cosine Similarity"
+      content="Sistem Rekomendasi Channel YouTube berbasis similarity antar channel"
     />
     <title>Rekomendasi Channel YouTube · IndoBERT</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,10 +13,6 @@
     <link
       rel="icon"
       href="https://cdn-icons-png.freepik.com/512/4401/4401464.png"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/css/style.css" />
   </head>
@@ -50,7 +46,7 @@
 
         <!-- RIGHT: Demo Badge + Theme Toggle -->
         <div class="header-right">
-          <span class="badge-thesis">Demo Sistem Rekomendasi</span>
+          <span class="badge-thesis">Demo Rekomendasi Channel</span>
 
           <!-- Theme Toggle Button -->
           <button
@@ -97,96 +93,32 @@
         <!-- HERO -->
         <section class="hero">
           <h1 class="hero-title">
-            Temukan Konten<br /><span class="gradient-text"
+            Temukan Channel<br /><span class="gradient-text"
               >yang Paling Relevan</span
             >
           </h1>
           <p class="hero-desc">
-            Masukkan kata kunci yang Anda cari, pilih kategori dan jenis
-            rekomendasi.<br />
-            Sistem akan mencari channel &amp; video YouTube yang paling mirip
-            menggunakan <strong>IndoBERT</strong>.
+            Pilih sebuah channel yang anda inginkan sebagai acuan.<br />
+            Sistem akan menampilkan channel YouTube lain yang paling mirip
+            menggunakan
+            <strong>IndoBERT</strong>.
           </p>
         </section>
 
         <!-- SEARCH CARD -->
         <section class="search-card" id="search-card">
-          <!-- ROW 1: MODE + CATEGORY -->
+          <!-- ROW 1: CHANNEL + TOP-K -->
           <div class="form-row two-col">
-            <!-- Mode Filter -->
             <div class="field-group">
-              <label class="field-label">
-                <span class="label-dot dot-purple"></span>
-                Jenis Rekomendasi <span class="req">*</span>
-              </label>
-              <div class="mode-toggle" id="mode-toggle">
-                <button
-                  class="mode-btn active"
-                  data-mode="video"
-                  id="btn-video"
-                >
-                  <svg viewBox="0 0 20 20" fill="currentColor" width="15">
-                    <path
-                      d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm14.553 8.106A1 1 0 0118 13.2V6.8a1 1 0 00-1.447-.894l-3 1.5A1 1 0 0013 8.3v3.4a1 1 0 00.553.894l3 1.5z"
-                    />
-                  </svg>
-                  Judul Video
-                </button>
-                <button class="mode-btn" data-mode="channel" id="btn-channel">
-                  <svg viewBox="0 0 20 20" fill="currentColor" width="15">
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  Channel
-                </button>
-              </div>
-              <input type="hidden" id="selected-mode" value="video" />
-            </div>
-
-            <!-- Category Filter -->
-            <div class="field-group">
-              <label class="field-label">
-                <span class="label-dot dot-blue"></span>
-                Kategori Konten <span class="req">*</span>
-              </label>
-              <select id="category-select" class="select-input">
-                <option value="Semua">— Semua Kategori —</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- ROW 2: QUERY + TOP-K -->
-          <div class="form-row two-col">
-            <!-- Query Input -->
-            <div class="field-group">
-              <label class="field-label" for="query-input">
+              <label class="field-label" for="channel-input">
                 <span class="label-dot dot-indigo"></span>
-                Kata Kunci Pencarian <span class="req">*</span>
+                Channel Acuan <span class="req">*</span>
               </label>
-              <div class="input-wrapper">
-                <svg
-                  class="input-icon"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  width="18"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <input
-                  type="text"
-                  id="query-input"
-                  class="query-input"
-                  placeholder="Contoh: review HP, resep masakan, berita hari ini . . . "
-                  autocomplete="off"
-                  spellcheck="false"
-                />
+              <select id="channel-input" class="select-input">
+                <option value="">— Pilih Channel —</option>
+              </select>
+              <div id="selected-category-meta" class="selected-category-meta">
+                Pilih channel untuk melihat kategorinya.
               </div>
             </div>
 
@@ -232,7 +164,7 @@
                 />
               </svg>
               <div id="btn-spinner" class="spinner" style="display: none"></div>
-              <span id="btn-label">Cari Rekomendasi</span>
+              <span id="btn-label">Cari Channel Serupa</span>
             </button>
           </div>
         </section>

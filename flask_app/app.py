@@ -1,7 +1,4 @@
-"""
-app.py – Flask Web Application
-Sistem Rekomendasi Channel YouTube menggunakan IndoBERT
-"""
+"""Flask web application for channel-only recommendations."""
 
 from flask import Flask, render_template, request, jsonify
 import recommender
@@ -28,32 +25,28 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/api/categories')
-def api_categories():
-    """Return list kategori dari dataset."""
-    cats = recommender.get_categories()
-    return jsonify({'categories': cats})
+@app.route('/api/channels')
+def api_channels():
+    """Return list channel yang tersedia untuk dipilih di web."""
+    channels = recommender.get_channels()
+    return jsonify({'channels': channels})
 
 
 @app.route('/api/recommend', methods=['POST'])
 def api_recommend():
     """
     Endpoint rekomendasi utama.
-    Body JSON: { query, mode, category, top_k }
+    Body JSON: { channel_name, top_k }
     """
     data = request.get_json(force=True)
 
-    query    = (data.get('query') or '').strip()
-    mode     = (data.get('mode') or 'video').strip()
-    category = (data.get('category') or 'Semua').strip()
-    top_k    = data.get('top_k', 5)
+    channel_name = (data.get('channel_name') or '').strip()
+    top_k = data.get('top_k', 5)
 
     # ── Validasi ──────────────────────────────────────────────────
     errors = []
-    if not query:
-        errors.append('Query pencarian tidak boleh kosong.')
-    if mode not in ('video', 'channel'):
-        errors.append('Jenis rekomendasi tidak valid.')
+    if not channel_name:
+        errors.append('Channel input tidak boleh kosong.')
     if errors:
         return jsonify({'error': ' '.join(errors)}), 400
 
@@ -64,11 +57,9 @@ def api_recommend():
 
     # ── Jalankan Rekomendasi ───────────────────────────────────────
     try:
-        result = recommender.recommend(
-            query    = query,
-            mode     = mode,
-            category = category,
-            top_k    = top_k,
+        result = recommender.recommend_channel(
+            channel_name=channel_name,
+            top_k=top_k,
         )
         return jsonify(result)
     except Exception as exc:
